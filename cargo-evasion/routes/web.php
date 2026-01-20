@@ -18,3 +18,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/test-admin', function () {
+    return "Bravo, tu es bien administrateur !";
+})->middleware(['auth', 'admin']);
