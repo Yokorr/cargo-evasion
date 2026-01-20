@@ -38,4 +38,19 @@ class AdminBikeController extends Controller
         // 3. Redirection avec un message de succès
         return redirect()->route('admin.bikes.index')->with('success', 'Vélo ajouté avec succès !');
     }
+    public function updateStatus(Bike $bike)
+    {
+        // Logique de bascule (Toggle)
+        if ($bike->status === 'available') {
+            $bike->status = 'maintenance';
+            $message = 'Le vélo est désormais en maintenance.';
+        } else {
+            $bike->status = 'available';
+            $message = 'Le vélo est de nouveau disponible.';
+        }
+
+        $bike->save();
+
+        return redirect()->back()->with('success', $message);
+    }
 }

@@ -28,7 +28,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Nouvelles routes pour la création
     Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('admin.bikes.create');
     Route::post('/velos', [AdminBikeController::class, 'store'])->name('admin.bikes.store');
+    Route::patch('/velos/{bike}/status', [AdminBikeController::class, 'updateStatus'])->name('admin.bikes.updateStatus');
     
     Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('admin.codes.index');
     Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
+    
 });
