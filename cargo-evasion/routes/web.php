@@ -20,6 +20,9 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-Route::get('/test-admin', function () {
-    return "Bravo, tu es bien administrateur !";
-})->middleware(['auth', 'admin']);
+use App\Http\Controllers\Admin\AdminBikeController;
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // La page principale du dashboard admin : la liste des vélos
+    Route::get('/velos', [AdminBikeController::class, 'index'])->name('admin.bikes.index');
+});
