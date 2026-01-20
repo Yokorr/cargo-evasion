@@ -21,8 +21,14 @@ require __DIR__.'/auth.php';
 
 
 use App\Http\Controllers\Admin\AdminBikeController;
+use App\Http\Controllers\Admin\AdminDailyCodeController;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    // La page principale du dashboard admin : la liste des vélos
     Route::get('/velos', [AdminBikeController::class, 'index'])->name('admin.bikes.index');
+    // Nouvelles routes pour la création
+    Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('admin.bikes.create');
+    Route::post('/velos', [AdminBikeController::class, 'store'])->name('admin.bikes.store');
+    
+    Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('admin.codes.index');
+    Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
 });
