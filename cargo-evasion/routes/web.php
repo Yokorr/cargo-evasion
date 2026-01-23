@@ -2,9 +2,16 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Bike;
+use App\Http\Controllers\Admin\AdminBikeController;
+use App\Http\Controllers\Admin\AdminDailyCodeController;
+
 
 Route::get('/', function () {
-    return view('welcome');
+    $availableBikesCount = Bike::where('status', 'available')->count();
+    return view('welcome', [
+        'availableBikesCount' => $availableBikesCount
+    ]);
 });
 
 Route::get('/dashboard', function () {
@@ -20,12 +27,9 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-use App\Http\Controllers\Admin\AdminBikeController;
-use App\Http\Controllers\Admin\AdminDailyCodeController;
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/velos', [AdminBikeController::class, 'index'])->name('admin.bikes.index');
-    // Nouvelles routes pour la création
+    
     Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('admin.bikes.create');
     Route::post('/velos', [AdminBikeController::class, 'store'])->name('admin.bikes.store');
     Route::patch('/velos/{bike}/status', [AdminBikeController::class, 'updateStatus'])->name('admin.bikes.updateStatus');
@@ -34,3 +38,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
     
 });
+
