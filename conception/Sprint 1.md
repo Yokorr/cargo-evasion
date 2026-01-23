@@ -70,7 +70,7 @@
 - [ ] Passage de la variable `$bikesCount` du contrôleur à la Landing Page.
 - [ ] Affichage dynamique : "X vélos disponibles à la location".
 
-### Dimanche (1h) - Revue de Sprint & Clôture
+ - Revue de Sprint & Clôture
 - [ ] Vérification de la conformité avec le cahier des charges.
 - [ ] Préparation du backlog pour le Sprint 2 (Paiement Monetico).
 - [ ] `git push origin main`.
