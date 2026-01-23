@@ -6,37 +6,37 @@
 
 ## 📅 SEMAINE 1 : Architecture et Moteur de Données (9h)
 
-### Lundi (1h) - Initialisation
+  - Initialisation
 - [ ] `composer create-project laravel/laravel cargo-evasion`
 - [ ] Initialisation du dépôt Git (`git init`) et premier commit.
 - [ ] Configuration du fichier `.env` (Base de données local).
 
-### Mardi (1h) - Authentification
+ - Authentification
 - [ ] Installation de Laravel Breeze : `composer require laravel/breeze --dev`.
 - [ ] `php artisan breeze:install blade`.
 - [ ] Test du cycle Inscription / Connexion.
 
-### Mercredi (1h) - Migrations Simples
+ - Migrations Simples
 - [ ] Création et édition de la migration `bikes` (champs : serial_number, model, status).
 - [ ] Création et édition de la migration `daily_codes` (champs : date_day, access_code).
 - [ ] `php artisan migrate`.
 
-### Jeudi (2h) - Migrations Complexes & Clés Étrangères
+ - Migrations Complexes & Clés Étrangères
 - [ ] Création de la migration `bookings` (clés étrangères vers users et bikes).
 - [ ] Ajout de la colonne `role` (default: 'user') dans la table `users`.
 - [ ] Exécution et vérification de la structure dans la base de données.
 
-### Vendredi (2h) - Modèles & Seeders (Données de test)
+ - Modèles & Seeders (Données de test)
 - [ ] Définition des relations Eloquent dans les modèles (`User`, `Bike`, `Booking`).
 - [ ] Création d'un `BikeSeeder` pour générer 10 vélos de test.
 - [ ] `php artisan db:seed` : Vérifier que la base n'est plus vide.
 
-### Samedi (1h) - Sécurité (Middleware)
+ - Sécurité (Middleware)
 - [ ] Création du Middleware `IsAdmin` : `php artisan make:middleware IsAdmin`.
 - [ ] Logique de vérification du rôle (`Auth::user()->role === 'admin'`).
 - [ ] Enregistrement du middleware dans `bootstrap/app.php`.
 
-### Dimanche (1h) - Validation technique
+ - Validation technique
 - [ ] Test manuel : Un utilisateur `user` ne doit pas accéder à une route protégée.
 - [ ] Nettoyage des fichiers inutiles et commit de fin de semaine.
 
@@ -44,29 +44,29 @@
 
 ## 📅 SEMAINE 2 : Backend Admin & Intégration Front (9h)
 
-### Lundi (1h) - Architecture des Routes
+ - Architecture des Routes
 - [ ] Définition du groupe de routes `prefix('admin')` avec le middleware `IsAdmin`.
 - [ ] Création de `AdminController`.
 
-### Mardi (1h) - Interface Admin : Liste des vélos
+- Interface Admin : Liste des vélos
 - [ ] Création de la vue `admin.bikes.index`.
 - [ ] Affichage de la flotte sous forme de tableau (Tailwind CSS).
 
-### Mercredi (1h) - Logique Maintenance (F3)
+ - Logique Maintenance (F3)
 - [ ] Création de la méthode `updateStatus` dans le contrôleur.
 - [ ] Ajout du bouton "Passer en maintenance" sur l'interface admin.
 
-### Jeudi (2h) - Gestion des Codes (F2)
+- Gestion des Codes (F2)
 - [ ] Création de la vue `admin.codes.index`.
 - [ ] Formulaire de saisie du code journalier (Date et Code).
 - [ ] Logique de sauvegarde `DailyCode::updateOrCreate()`.
 
-### Vendredi (2h) - Intégration Front : Landing Page (Figma 1)
+ - Intégration Front : Landing Page (Figma 1)
 - [ ] Création de la vue `welcome.blade.php`.
 - [ ] Intégration du Header et de la section "Hero" avec Tailwind.
 - [ ] Respect des arrondis (24px) et des ombres définis dans Figma.
 
-### Samedi (1h) - Données Dynamiques
+ - Données Dynamiques
 - [ ] Passage de la variable `$bikesCount` du contrôleur à la Landing Page.
 - [ ] Affichage dynamique : "X vélos disponibles à la location".
 
