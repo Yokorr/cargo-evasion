@@ -28,8 +28,7 @@ return new class extends Migration
             $table->string('monetico_token')->nullable(); // Pour la gestion de la caution
             
             // Lien avec le code du jour
-            $table->date('code_date'); 
-            $table->foreign('code_date')->references('date_day')->on('daily_codes');
+            $table->date('code_date')->nullable();
 
             $table->timestamps();
         });
