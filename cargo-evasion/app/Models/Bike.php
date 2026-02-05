@@ -11,4 +11,8 @@ class Bike extends Model
     }
     // On autorise ces champs à être remplis via un formulaire
     protected $fillable = ['serial_number', 'model', 'status'];
+
+    public function prices() {
+        return $this->hasMany(Price::class);
+    }
 }

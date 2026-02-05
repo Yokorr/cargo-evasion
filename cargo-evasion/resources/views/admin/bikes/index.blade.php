@@ -31,29 +31,48 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($bikes as $bike)
-                        <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $bike->model }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-600">{{ $bike->serial_number }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-900">{{ $bike->model }}</div>
+                                <div class="text-xs text-gray-500 font-mono">{{ $bike->serial_number }}</div>
+                            </td>
+                            <td class="px-6 py-4">
                                 <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full {{ $bike->status == 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $bike->status === 'available' ? 'Disponible' : 'En maintenance' }}
+                                    {{ $bike->status === 'available' ? 'Disponible' : 'Maintenance' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <form action="{{ route('admin.bikes.updateStatus', $bike) }}" method="POST" class="inline">
+                            
+                            <td class="px-6 py-4">
+                                <div class="space-y-1">
+                                    @foreach($bike->prices as $price)
+                                        <div class="text-xs flex justify-between bg-gray-50 p-1 rounded">
+                                            <span class="font-medium">{{ $price->label }}</span>
+                                            <span class="text-emerald-700 font-bold">{{ $price->amount }}€</span>
+                                        </div>
+                                    @endforeach
+                                    
+                                    <form action="{{ route('admin.bikes.storePrice', $bike) }}" method="POST" class="mt-2 flex gap-1">
+                                        @csrf
+                                        <input type="text" name="label" placeholder="Nom (ex: Matin)" class="text-xs p-1 border rounded w-20" required>
+                                        <input type="number" name="amount" placeholder="€" class="text-xs p-1 border rounded w-12" required>
+                                        <input type="number" name="duration_hours" placeholder="H" class="text-xs p-1 border rounded w-10" required title="Durée en heures">
+                                        <button type="submit" class="bg-gray-800 text-white text-xs px-2 py-1 rounded hover:bg-black">+</button>
+                                    </form>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 text-right">
+                                <form action="{{ route('admin.bikes.updateStatus', $bike) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
-                                        {{ $bike->status === 'available' ? '🔧 Mettre en maintenance' : '✅ Marquer comme réparé' }}
+                                    <button type="submit" class="text-xs font-bold uppercase tracking-wider {{ $bike->status === 'available' ? 'text-amber-600' : 'text-emerald-600' }}">
+                                        {{ $bike->status === 'available' ? '🔧 Maintenance' : '✅ Réparé' }}
                                     </button>
                                 </form>
                             </td>
                         </tr>
                         @empty
-                        <tr>
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-500 italic">Aucun vélo dans la flotte pour le moment.</td>
-                        </tr>
-                        @endforelse
+                            @endforelse
                     </tbody>
                 </table>
             </div>

@@ -36,6 +36,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
     Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('admin.codes.index');
     Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
+
+    Route::post('/velos/{bike}/prices', [AdminBikeController::class, 'storePrice'])->name('admin.bikes.storePrice');
     
 });
 
