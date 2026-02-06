@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Bike;
 use App\Http\Controllers\Admin\AdminBikeController;
 use App\Http\Controllers\Admin\AdminDailyCodeController;
-
+use App\Http\Controllers\BikeController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     $availableBikesCount = Bike::where('status', 'available')->count();
@@ -13,6 +15,8 @@ Route::get('/', function () {
         'availableBikesCount' => $availableBikesCount
     ]);
 });
+
+Route::get('/nos-velos', [BikeController::class, 'index'])->name('bikes.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -41,3 +45,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
 });
 
+Route::post('/bookings/check-availability', [BookingController::class, 'check'])->name('bookings.check');
+
+
+// Gestion de la sélection (Panier)
+Route::post('/selection/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/recapitulatif', [CartController::class, 'index'])->name('cart.index');
+Route::delete('/selection/{id}', [CartController::class, 'remove'])->name('cart.remove');

@@ -1,84 +1,51 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cargo Évasion - Location de vélos cargos</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .rounded-figma { border-radius: 24px; }
-    </style>
-</head>
-<body class="antialiased bg-gray-50 text-gray-900">
+@extends('layouts.front')
 
-    <header class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-200">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+@section('title', 'Milly Évasion — Location de vélos au 91')
+
+@section('content')
+    <section class="pt-32 md:pt-48 pb-20 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            
+            <div class="space-y-8 md:space-y-10 text-center lg:text-left relative z-10">
+                <div class="inline-block px-4 py-2 bg-emerald-50 rounded-full">
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 italic">Explorez Milly-la-Forêt autrement</span>
                 </div>
-                <span class="text-xl font-extrabold tracking-tight text-emerald-900">CARGO ÉVASION</span>
-            </div>
-
-            <div class="hidden md:flex items-center gap-8 font-medium text-gray-600">
-                <a href="#" class="hover:text-emerald-600 transition">Nos Vélos</a>
-                <a href="#" class="hover:text-emerald-600 transition">Tarifs</a>
-                <a href="#" class="hover:text-emerald-600 transition">Contact</a>
-            </div>
-
-            <div class="flex items-center gap-4">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-figma shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition">Mon Espace</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-600 font-semibold hover:text-emerald-600">Connexion</a>
-                        <a href="{{ route('register') }}" class="px-5 py-2.5 bg-emerald-900 text-white font-semibold rounded-figma shadow-xl shadow-gray-200 hover:bg-black transition">S'inscrire</a>
-                    @endauth
-                @endif
-            </div>
-        </nav>
-    </header>
-
-    <section class="pt-32 pb-20 px-6">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div class="space-y-8">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 leading-[1.1]">
-                    Libérez votre mobilité avec <span class="text-emerald-600">Sports Carbone</span>.
+                
+                <h1 class="text-5xl sm:text-7xl lg:text-8xl font-[900] text-black leading-[0.85] tracking-tighter uppercase italic">
+                    L'échappée<br><span class="text-emerald-500">sauvage.</span>
                 </h1>
-                <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
-                    Louez un vélo cargo en quelques clics. Simple, écologique et parfait pour vos trajets en famille.
+                
+                <p class="text-base md:text-lg text-gray-500 leading-relaxed max-w-md mx-auto lg:mx-0 font-medium">
+                    Louez votre vélo cargo électrique au cœur de Milly. Idéal pour vos balades en forêt de Fontainebleau ou vos sorties au Cyclop.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                    <a href="{{ route('register') }}" class="px-8 py-4 bg-emerald-600 text-white text-lg font-bold rounded-figma shadow-2xl shadow-emerald-200 hover:scale-105 transition transform text-center">
-                        Réserver un vélo
-                    </a>
-                    <a href="#vélos" class="px-8 py-4 bg-white text-gray-900 text-lg font-bold rounded-figma shadow-sm border border-gray-100 hover:bg-gray-50 transition text-center">
-                        Voir la flotte
+                
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+                    <a href="{{ route('bikes.index') }}" class="px-10 py-5 bg-black text-white text-xs font-black uppercase tracking-widest rounded-full shadow-2xl hover:bg-emerald-600 transition transform hover:scale-105">
+                        Réserver mon vélo
                     </a>
                 </div>
             </div>
 
-            <div class="relative">
-                <div class="absolute -top-10 -right-10 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-50"></div>
-                <div class="relative bg-emerald-800 h-[500px] rounded-figma shadow-2xl overflow-hidden border-8 border-white">
+            <div class="relative mt-12 lg:mt-0">
+                <div class="absolute -top-20 -right-20 w-64 md:w-80 h-64 md:h-80 bg-emerald-100 rounded-full blur-[80px] md:blur-[100px] opacity-40"></div>
+                
+                <div class="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[4/5] bg-gray-900 rounded-[32px] md:rounded-[40px] shadow-3xl overflow-hidden border-[8px] md:border-[12px] border-white">
                     <img src="https://images.unsplash.com/photo-1616422285623-13ff0167c95c?q=80&w=1000&auto=format&fit=crop" 
-                         alt="Vélo Cargo" 
-                         class="w-full h-full object-cover opacity-80">
-                    <div class="absolute bottom-6 left-6 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce">
-                        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                            <span class="text-2xl">🚲</span>
+                         alt="Vélo Cargo Milly" class="w-full h-full object-cover opacity-80">
+                    
+                    <div class="absolute bottom-6 left-6 md:bottom-10 md:left-10 bg-white/95 backdrop-blur-md p-4 md:p-6 rounded-[24px] md:rounded-[32px] shadow-2xl flex items-center gap-3 md:gap-5">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-emerald-500 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-200">
+                            <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 font-bold uppercase">Disponibles</p>
-                            <p class="text-lg font-black text-emerald-900">{{ $availableBikesCount }} {{ Str::plural('Vélo', $availableBikesCount) }}</p>
+                            <p class="text-[8px] md:text-[10px] text-gray-400 font-black uppercase tracking-widest mb-0.5 md:mb-1">Dispo à Milly</p>
+                            <p class="text-lg md:text-2xl font-[900] text-black italic uppercase tracking-tighter">
+                                {{ $availableBikesCount ?? 0 }} Modèles
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-</body>
-</html>
+@endsection
