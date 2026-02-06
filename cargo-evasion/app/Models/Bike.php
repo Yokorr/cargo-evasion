@@ -10,7 +10,17 @@ class Bike extends Model
         return $this->hasMany(Booking::class);
     }
     // On autorise ces champs à être remplis via un formulaire
-    protected $fillable = ['serial_number', 'model', 'status'];
+    
+    protected $fillable = [
+    'serial_number', 
+    'model', 
+    'description', 
+    'image', 
+    'status', 
+    'price_morning', 
+    'price_afternoon', 
+    'price_full_day'
+    ];
 
     public function prices() {
         return $this->hasMany(Price::class);

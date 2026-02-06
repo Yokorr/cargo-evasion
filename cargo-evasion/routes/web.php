@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminDailyCodeController;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     $availableBikesCount = Bike::where('status', 'available')->count();
@@ -52,3 +53,13 @@ Route::post('/bookings/check-availability', [BookingController::class, 'check'])
 Route::post('/selection/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/recapitulatif', [CartController::class, 'index'])->name('cart.index');
 Route::delete('/selection/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+Route::get('/finaliser-ma-reservation', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->name('checkout.store');
+
+// Les pages où le client revient après la banque
+Route::get('/paiement/succes', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+Route::get('/paiement/erreur', [App\Http\Controllers\PaymentController::class, 'error'])->name('payment.error');
+
+// La route qui traite la redirection (déjà prévue normalement)
+Route::get('/paiement/process', [App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');

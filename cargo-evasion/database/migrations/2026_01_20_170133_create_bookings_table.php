@@ -6,39 +6,48 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    
+    public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            
-            // Relations (Clés étrangères)
+
+            // Relation avec le client 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            // Relation avec le vélo 
             $table->foreignId('bike_id')->constrained()->onDelete('cascade');
-            
-            // Détails de la location
+
+            // Dates et heures précises de début et de fin
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+
+            // Prix total calculé au moment de la mise au panier
             $table->decimal('total_price', 8, 2);
-            
-            // État du paiement et Caution (Monetico)
-            $table->string('payment_status')->default('pending'); // pending, paid, cancelled
-            $table->string('monetico_token')->nullable(); // Pour la gestion de la caution
-            
-            // Lien avec le code du jour
-            $table->date('code_date')->nullable();
+
+            // Référence unique de commande 
+            // C'est ce numéro que la banque nous renverra pour valider le paiement
+            $table->string('reference')->unique();
+
+            // État de la réservation 
+            $table->string('status')->default('pending');
+
+            // État financier 
+            // On le passera à 'paid' uniquement après le retour positif de Monetico
+            $table->string('payment_status')->default('unpaid');
 
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('bookings');
+        // 1. On désactive la vérification des clés étrangères
+        Schema::disableForeignKeyConstraints();
+
+        // 2. On supprime la table
+        Schema::dropIfExists('bikes');
+
+        // 3. On les réactive
+        Schema::enableForeignKeyConstraints();
     }
 };

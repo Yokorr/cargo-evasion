@@ -47,9 +47,10 @@
                         <a href="{{ route('bikes.index') }}" class="px-10 py-6 rounded-full border-2 border-black text-black font-black uppercase tracking-widest text-[10px] hover:bg-gray-50 transition">
                             Continuer
                         </a>
-                        <button class="px-10 py-6 rounded-full bg-emerald-500 text-white font-black uppercase tracking-widest text-[10px] hover:bg-black transition shadow-2xl shadow-emerald-200">
-                            Payer ma location
-                        </button>
+                        <a href="{{ route('checkout.index') }}" 
+                            class="px-10 py-6 rounded-full bg-emerald-500 text-white font-black uppercase tracking-widest text-[10px] hover:bg-black transition shadow-2xl shadow-emerald-200 text-center">
+                                Payer ma location
+                        </a>
                     </div>
                 </div>
             </div>

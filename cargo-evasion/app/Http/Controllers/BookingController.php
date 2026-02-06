@@ -8,37 +8,33 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function check(Request $request)
-    {
-        $bike = Bike::findOrFail($request->bike_id);
-        $start = Carbon::parse($request->start_date);
-        $end = Carbon::parse($request->end_date);
+    
+public function check(Request $request)
+{
+    $bike = Bike::find($request->bike_id);
+    
+    // On récupère le créneau envoyé par le bouton cliqué (morning, afternoon ou full_day)
+    // On peut se baser sur les heures ou plus simplement sur un paramètre "type" envoyé par le bouton
+    $type = $request->type; 
 
-        if (!$bike->isAvailable($start, $end)) {
-            return response()->json(['available' => false, 'message' => 'Déjà réservé.']);
-        }
+    $price = 0;
+    $label = "";
 
-        $durationHours = $start->diffInHours($end);
-
-        // 1. On cherche d'abord un forfait exact (ex: Matinée 4h)
-        $priceTier = $bike->prices()->where('duration_hours', $durationHours)->first();
-
-        // 2. Si pas de forfait exact, on calcule (ex: Prix de base à l'heure)
-        // On peut imaginer un prix par défaut ou prendre le tarif le plus bas divisé par ses heures
-        if (!$priceTier) {
-            $basePrice = $bike->prices()->min('amount') / 4; // Estimation si pas de prix heure
-            $totalPrice = round($basePrice * $durationHours, 2);
-            $label = "Tarif horaire sur mesure";
-        } else {
-            $totalPrice = $priceTier->amount;
-            $label = $priceTier->label;
-        }
-
-        return response()->json([
-            'available' => true,
-            'duration' => $durationHours,
-            'total_price' => $totalPrice,
-            'label' => $label
-        ]);
+    if ($type == 'morning') {
+        $price = $bike->price_morning;
+        $label = "Matinée (9h-13h)";
+    } elseif ($type == 'afternoon') {
+        $price = $bike->price_afternoon;
+        $label = "Après-midi (13h30-17h30)";
+    } else {
+        $price = $bike->price_full_day;
+        $label = "Journée complète";
     }
+
+    return response()->json([
+        'available' => true,
+        'total_price' => $price,
+        'label' => $label
+    ]);
+}
 }
