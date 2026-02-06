@@ -2,10 +2,22 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Bike;
+use App\Http\Controllers\Admin\AdminBikeController;
+use App\Http\Controllers\Admin\AdminDailyCodeController;
+use App\Http\Controllers\BikeController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $availableBikesCount = Bike::where('status', 'available')->count();
+    return view('welcome', [
+        'availableBikesCount' => $availableBikesCount
+    ]);
 });
+
+Route::get('/nos-velos', [BikeController::class, 'index'])->name('bikes.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -20,17 +32,34 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-use App\Http\Controllers\Admin\AdminBikeController;
-use App\Http\Controllers\Admin\AdminDailyCodeController;
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/velos', [AdminBikeController::class, 'index'])->name('admin.bikes.index');
-    // Nouvelles routes pour la création
+    
     Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('admin.bikes.create');
     Route::post('/velos', [AdminBikeController::class, 'store'])->name('admin.bikes.store');
     Route::patch('/velos/{bike}/status', [AdminBikeController::class, 'updateStatus'])->name('admin.bikes.updateStatus');
     
     Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('admin.codes.index');
     Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
+
+    Route::post('/velos/{bike}/prices', [AdminBikeController::class, 'storePrice'])->name('admin.bikes.storePrice');
     
 });
+
+Route::post('/bookings/check-availability', [BookingController::class, 'check'])->name('bookings.check');
+
+
+// Gestion de la sélection (Panier)
+Route::post('/selection/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/recapitulatif', [CartController::class, 'index'])->name('cart.index');
+Route::delete('/selection/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+Route::get('/finaliser-ma-reservation', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->name('checkout.store');
+
+// Les pages où le client revient après la banque
+Route::get('/paiement/succes', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+Route::get('/paiement/erreur', [App\Http\Controllers\PaymentController::class, 'error'])->name('payment.error');
+
+// La route qui traite la redirection (déjà prévue normalement)
+Route::get('/paiement/process', [App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');

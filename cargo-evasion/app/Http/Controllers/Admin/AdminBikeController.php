@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Bike;
 use Illuminate\Http\Request;
+use App\Models\Price;
 
 class AdminBikeController extends Controller
 {
@@ -52,5 +53,17 @@ class AdminBikeController extends Controller
         $bike->save();
 
         return redirect()->back()->with('success', $message);
+    }
+    public function storePrice(Request $request, Bike $bike)
+    {
+        $validated = $request->validate([
+            'label' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'duration_hours' => 'required|integer|min:1',
+        ]);
+
+        $bike->prices()->create($validated);
+
+        return redirect()->back()->with('success', 'Tarif ajouté pour ce vélo !');
     }
 }
