@@ -24,7 +24,9 @@ Alpine.data('bookingSystem', () => ({
     },
 
     setSlot(type) {
+        this.result = null; // On vide le résultat précédent pour forcer le rafraîchissement
         this.currentType = type;
+        
         if(type === 'morning') {
             this.start = this.selectedDate + ' 09:00';
             this.end = this.selectedDate + ' 13:00';
@@ -35,6 +37,7 @@ Alpine.data('bookingSystem', () => ({
             this.start = this.selectedDate + ' 09:00';
             this.end = this.selectedDate + ' 17:30';
         }
+        
         this.check();
     },
 

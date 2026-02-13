@@ -21,7 +21,7 @@
             <div class="mt-8 flex justify-between items-end px-4">
                 <div>
                     <h2 class="milly-h2">{{ $bike->model }}</h2>
-                    <p class="milly-bike-card-price">Dès {{ $bike->price_morning }}€</p>
+                    <p class="milly-bike-card-price">Dès {{ $bike->lowest_price }}€</p>
                 </div>
                 <div class="milly-btn-black">Découvrir</div>
             </div>
@@ -83,19 +83,21 @@
                             </div>
                         </div>
 
-                        <div class="mt-12 transition-all duration-500" x-show="result" x-cloak>
-                            <template x-if="result?.available">
-                                <div class="milly-booking-success-banner animate-bounce-short">
-                                    <div>
-                                        <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-1" x-text="result.label"></p>
-                                        <p class="text-5xl font-black"><span x-text="result.total_price"></span>€</p>
-                                    </div>
-                                    <button @click="addToCart()" class="milly-btn-black hover:bg-white hover:text-black">
-                                        <span x-show="!adding">Réserver</span>
-                                        <span x-show="adding">Traitement...</span>
-                                    </button>
+                        <div class="mt-12 transition-all duration-500" x-show="result && result.available" x-cloak>
+                            <div class="milly-booking-success-banner animate-bounce-short">
+                                <div>
+                                    <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-1" x-text="result ? result.label : ''"></p>
+                                    <p class="text-5xl font-black"><span x-text="result ? result.total_price : '0'"></span>€</p>
                                 </div>
-                            </template>
+                                <button @click="addToCart()" class="milly-btn-black hover:bg-white hover:text-black">
+                                    <span x-show="!adding">Réserver</span>
+                                    <span x-show="adding">Traitement...</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 p-8 bg-red-50 rounded-[32px] border border-red-100" x-show="result && !result.available" x-cloak>
+                            <p class="text-red-600 font-bold text-sm">Désolé, ce vélo n'est pas disponible pour ce créneau.</p>
                         </div>
                     </div>
                 </div>

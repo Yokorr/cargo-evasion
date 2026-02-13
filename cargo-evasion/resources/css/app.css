@@ -131,4 +131,47 @@
     .milly-card-bike { 
         @apply aspect-[4/5] bg-gray-100 rounded-[40px] overflow-hidden shadow-2xl relative border-8 border-white group-hover:border-emerald-500/10 transition-all duration-500; 
     }
+    /* --- PANIER (CART) --- */
+    .milly-cart-item {
+        @apply flex justify-between items-center p-8 bg-[#FBFBFB] rounded-[32px] border border-gray-100 transition-all hover:border-emerald-500/20;
+    }
+
+    .milly-icon-box {
+        @apply w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-white shadow-lg;
+    }
+
+    .milly-total-price {
+        @apply text-7xl font-black tracking-tighter leading-none;
+    }
+
+    /* Variantes de boutons pour le panier */
+    .milly-btn-pay {
+        @apply px-10 py-6 rounded-full bg-emerald-500 text-white font-black uppercase tracking-widest text-[10px] hover:bg-black transition shadow-2xl shadow-emerald-200 text-center;
+    }
+
+    .milly-btn-continue {
+        @apply px-10 py-6 rounded-full border-2 border-black text-black font-black uppercase tracking-widest text-[10px] hover:bg-gray-50 transition text-center;
+    }
+    /* --- FORMULAIRES DE CHECKOUT --- */
+    .milly-input-group {
+        @apply space-y-2;
+    }
+
+    .milly-checkout-input {
+        @apply w-full bg-white border-none rounded-[20px] p-4 shadow-sm focus:ring-2 focus:ring-emerald-500 transition placeholder:text-gray-300;
+    }
+
+    /* Le bloc mot de passe pour les invités */
+    .milly-guest-card {
+        @apply p-8 bg-emerald-50 rounded-[32px] border border-emerald-100 space-y-6;
+    }
+
+    /* Le résumé collant à droite */
+    .milly-summary-card {
+        @apply bg-white rounded-[40px] p-10 shadow-sm sticky top-32 border border-gray-100;
+    }
+
+    .milly-summary-item {
+        @apply flex justify-between items-center pb-6 border-b border-gray-50;
+    }
 }

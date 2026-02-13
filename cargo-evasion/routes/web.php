@@ -1,23 +1,74 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Bike;
-use App\Http\Controllers\Admin\AdminBikeController;
-use App\Http\Controllers\Admin\AdminDailyCodeController;
+
+// Contrôleurs Front
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PaymentController;
+
+// Contrôleurs Admin
+use App\Http\Controllers\Admin\AdminBikeController;
+use App\Http\Controllers\Admin\AdminDailyCodeController;
+
+/*
+|--------------------------------------------------------------------------
+| 1. PAGES PUBLIQUES (FRONT-OFFICE)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     $availableBikesCount = Bike::where('status', 'available')->count();
-    return view('welcome', [
-        'availableBikesCount' => $availableBikesCount
-    ]);
+    return view('welcome', compact('availableBikesCount'));
 });
 
+// La Flotte (Liste des vélos)
 Route::get('/nos-velos', [BikeController::class, 'index'])->name('bikes.index');
+
+/*
+|--------------------------------------------------------------------------
+| 2. TUNNEL DE RÉSERVATION (LOGIQUE JS & PANIER)
+|--------------------------------------------------------------------------
+*/
+
+// Vérification de disponibilité (appelé par Alpine.js)
+Route::post('/bookings/check', [BookingController::class, 'check'])->name('bookings.check');
+
+// Gestion du Panier (Sélection)
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index'); // /cart
+    Route::post('/add', [CartController::class, 'add'])->name('add');   // /cart/add
+    Route::delete('/{id}', [CartController::class, 'remove'])->name('remove');
+});
+
+/*
+|--------------------------------------------------------------------------
+| 3. PAIEMENT & COMMANDES (CHECKOUT)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    // Formulaire de coordonnées
+    Route::get('/finaliser-ma-reservation', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    // Retours de paiement
+    Route::prefix('paiement')->name('payment.')->group(function () {
+        Route::get('/process', [PaymentController::class, 'process'])->name('process');
+        Route::get('/succes', [PaymentController::class, 'success'])->name('success');
+        Route::get('/erreur', [PaymentController::class, 'error'])->name('error');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| 4. ESPACE CLIENT (PROFILE / DASHBOARD)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,35 +82,22 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+/*
+|--------------------------------------------------------------------------
+| 5. ESPACE ADMINISTRATION (PROTECTION ADMIN)
+|--------------------------------------------------------------------------
+*/
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/velos', [AdminBikeController::class, 'index'])->name('admin.bikes.index');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
-    Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('admin.bikes.create');
-    Route::post('/velos', [AdminBikeController::class, 'store'])->name('admin.bikes.store');
-    Route::patch('/velos/{bike}/status', [AdminBikeController::class, 'updateStatus'])->name('admin.bikes.updateStatus');
+    // Gestion de la Flotte
+    Route::get('/velos', [AdminBikeController::class, 'index'])->name('bikes.index');
+    Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('bikes.create');
+    Route::post('/velos', [AdminBikeController::class, 'store'])->name('bikes.store');
+    Route::put('/velos/{bike}', [AdminBikeController::class, 'update'])->name('bikes.update');
     
-    Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('admin.codes.index');
-    Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('admin.codes.store');
+    // Codes Digicodes quotidiens
+    Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('codes.index');
+    Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('codes.store');
 
-    Route::post('/velos/{bike}/prices', [AdminBikeController::class, 'storePrice'])->name('admin.bikes.storePrice');
-    
 });
-
-Route::post('/bookings/check-availability', [BookingController::class, 'check'])->name('bookings.check');
-
-
-// Gestion de la sélection (Panier)
-Route::post('/selection/add', [CartController::class, 'add'])->name('cart.add');
-Route::get('/recapitulatif', [CartController::class, 'index'])->name('cart.index');
-Route::delete('/selection/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
-Route::get('/finaliser-ma-reservation', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->name('checkout.store');
-
-// Les pages où le client revient après la banque
-Route::get('/paiement/succes', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
-Route::get('/paiement/erreur', [App\Http\Controllers\PaymentController::class, 'error'])->name('payment.error');
-
-// La route qui traite la redirection (déjà prévue normalement)
-Route::get('/paiement/process', [App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');
