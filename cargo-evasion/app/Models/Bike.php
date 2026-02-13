@@ -43,4 +43,11 @@ class Bike extends Model
         ->exists();
 
     }
+    /**
+     * Calcule dynamiquement le prix le plus bas parmi les trois créneaux.
+     */
+    public function getLowestPriceAttribute()
+    {
+        return min($this->price_morning, $this->price_afternoon, $this->price_full_day);
+    }
 }

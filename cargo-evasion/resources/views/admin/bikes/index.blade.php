@@ -1,10 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Gestion de la Flotte - Sports Carbone') }}
-            </h2>
-            <a href="{{ route('admin.bikes.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
+            <h1 class="text-2xl font-black uppercase italic tracking-tighter">Gestion Flotte</h1>
+            <a href="{{ route('admin.bikes.create') }}" class="milly-btn-main !py-3 !px-6 text-[10px]">
                 + Ajouter un vélo
             </a>
         </div>
@@ -12,67 +10,67 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded shadow-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border border-gray-100">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Modèle</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">N° de Série</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Statut</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+            <div class="bg-white shadow-sm sm:rounded-[32px] overflow-hidden border border-gray-100">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-100">
+                            <th class="p-6 milly-label">Modèle / N° Série</th>
+                            <th class="p-6 milly-label text-center">Tarifs (Matin | Aprem | Jour)</th>
+                            <th class="p-6 milly-label text-center">Maintenance</th>
+                            <th class="p-6 milly-label text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($bikes as $bike)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-gray-900">{{ $bike->model }}</div>
-                                <div class="text-xs text-gray-500 font-mono">{{ $bike->serial_number }}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full {{ $bike->status == 'available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $bike->status === 'available' ? 'Disponible' : 'Maintenance' }}
-                                </span>
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <div class="space-y-1">
-                                    @foreach($bike->prices as $price)
-                                        <div class="text-xs flex justify-between bg-gray-50 p-1 rounded">
-                                            <span class="font-medium">{{ $price->label }}</span>
-                                            <span class="text-emerald-700 font-bold">{{ $price->amount }}€</span>
-                                        </div>
-                                    @endforeach
-                                    
-                                    <form action="{{ route('admin.bikes.storePrice', $bike) }}" method="POST" class="mt-2 flex gap-1">
-                                        @csrf
-                                        <input type="text" name="label" placeholder="Nom (ex: Matin)" class="text-xs p-1 border rounded w-20" required>
-                                        <input type="number" name="amount" placeholder="€" class="text-xs p-1 border rounded w-12" required>
-                                        <input type="number" name="duration_hours" placeholder="H" class="text-xs p-1 border rounded w-10" required title="Durée en heures">
-                                        <button type="submit" class="bg-gray-800 text-white text-xs px-2 py-1 rounded hover:bg-black">+</button>
-                                    </form>
-                                </div>
-                            </td>
+                    <tbody class="divide-y divide-gray-50">
+                        @foreach($bikes as $bike)
+                        <tr class="hover:bg-gray-50/50 transition-colors">
+                            <form action="{{ route('admin.bikes.update', $bike) }}" method="POST">
+                                @csrf @method('PUT')
+                                
+                                <td class="p-6 min-w-[300px]">
+                                    <div class="font-black uppercase italic text-lg leading-none mb-3">{{ $bike->model }}</div>
+                                    <div class="text-[10px] text-gray-400 font-black uppercase mb-2">Description courte :</div>
+                                    <textarea name="description" 
+                                            rows="2" 
+                                            class="w-full p-3 bg-gray-50 border-2 border-transparent rounded-xl text-xs font-medium focus:bg-white focus:border-emerald-500 outline-none transition-all resize-none"
+                                            placeholder="Ex: Assistance Bosch, 2 places enfants...">{{ $bike->description }}</textarea>
+                                    <div class="text-[10px] text-gray-400 font-bold uppercase mt-2">N° Série : {{ $bike->serial_number }}</div>
+                                </td>
 
-                            <td class="px-6 py-4 text-right">
-                                <form action="{{ route('admin.bikes.updateStatus', $bike) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="text-xs font-bold uppercase tracking-wider {{ $bike->status === 'available' ? 'text-amber-600' : 'text-emerald-600' }}">
-                                        {{ $bike->status === 'available' ? '🔧 Maintenance' : '✅ Réparé' }}
+                                <td class="p-6">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <div class="relative">
+                                            <input type="number" name="price_morning" value="{{ $bike->price_morning }}" class="w-20 p-2 pl-6 border-2 border-gray-100 rounded-xl font-bold text-sm focus:border-emerald-500 outline-none">
+                                            <span class="absolute left-2 top-2.5 text-[10px] text-gray-400 font-black">M</span>
+                                        </div>
+                                        <div class="relative">
+                                            <input type="number" name="price_afternoon" value="{{ $bike->price_afternoon }}" class="w-20 p-2 pl-6 border-2 border-gray-100 rounded-xl font-bold text-sm focus:border-emerald-500 outline-none">
+                                            <span class="absolute left-2 top-2.5 text-[10px] text-gray-400 font-black">A</span>
+                                        </div>
+                                        <div class="relative">
+                                            <input type="number" name="price_full_day" value="{{ $bike->price_full_day }}" class="w-20 p-2 pl-6 border-2 border-gray-100 rounded-xl font-bold text-sm focus:border-emerald-500 outline-none">
+                                            <span class="absolute left-2 top-2.5 text-[10px] text-gray-400 font-black">J</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="p-6 text-center">
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="is_maintenance" class="sr-only peer" {{ $bike->status === 'maintenance' ? 'checked' : '' }}>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                                    </label>
+                                    <div class="text-[8px] font-black uppercase mt-1 {{ $bike->status === 'maintenance' ? 'text-amber-600' : 'text-gray-300' }}">
+                                        {{ $bike->status === 'maintenance' ? 'Hors-service' : 'En service' }}
+                                    </div>
+                                </td>
+
+                                <td class="p-6 text-right">
+                                    <button type="submit" class="milly-btn-black !py-3 !px-6 text-[10px] whitespace-nowrap">
+                                        Sauvegarder
                                     </button>
-                                </form>
-                            </td>
+                                </td>
+                            </form>
                         </tr>
-                        @empty
-                            @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>

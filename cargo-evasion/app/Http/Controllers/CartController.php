@@ -2,48 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bike;
 use Illuminate\Http\Request;
+use App\Models\Bike;
 
 class CartController extends Controller
 {
-    public function add(Request $request)
-    {
-        $cart = session()->get('cart', []);
-
-        // On récupère les infos du vélo et du calcul de prix
-        $bike = Bike::find($request->bike_id);
-        
-        // On ajoute à la session
-        $cart[] = [
-            'id' => uniqid(), // ID unique pour le panier
-            'bike_id' => $bike->id,
-            'model' => $bike->model,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'price' => $request->total_price,
-            'label' => $request->label
-        ];
-
-        session()->put('cart', $cart);
-
-        return response()->json(['message' => 'Ajouté à la sélection', 'count' => count($cart)]);
-    }
-
     public function index()
     {
         $cart = session()->get('cart', []);
-        $total = array_sum(array_column($cart, 'price'));
-
+        $total = collect($cart)->sum('price');
         return view('cart.index', compact('cart', 'total'));
     }
 
-    public function remove($id)
+    public function add(Request $request)
     {
+        // 1. On récupère le panier actuel ou un tableau vide
         $cart = session()->get('cart', []);
-        $cart = array_filter($cart, fn($item) => $item['id'] !== $id);
+
+        // 2. On récupère les infos du vélo pour avoir le nom propre
+        $bike = Bike::find($request->bike_id);
+
+        // 3. On ajoute le nouvel article
+        $cart[] = [
+            'id' => uniqid(), // ID unique pour pouvoir le supprimer plus tard
+            'bike_id' => $request->bike_id,
+            'model' => $bike->model,
+            'price' => $request->total_price,
+            'label' => $request->label,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ];
+
+        // 4. On sauvegarde dans la session
         session()->put('cart', $cart);
 
-        return back()->with('success', 'Vélo retiré');
+        // 5. On renvoie un JSON de succès
+        return response()->json(['success' => true]);
     }
 }
