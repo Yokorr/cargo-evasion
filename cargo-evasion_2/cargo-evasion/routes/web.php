@@ -65,13 +65,17 @@ Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->
 
 Route::middleware('auth')->group(function () {
     
-    
-    // Retours de paiement
     Route::prefix('paiement')->name('payment.')->group(function () {
-    Route::get('/{reference}', [PaymentController::class, 'index'])->name('index'); // Ajoute celle-ci
-    Route::get('/process', [PaymentController::class, 'process'])->name('process');
-    Route::get('/succes', [PaymentController::class, 'success'])->name('success');
-    Route::get('/erreur', [PaymentController::class, 'error'])->name('error');
+        // 1. Les routes précises en PREMIER
+        Route::get('/process', [PaymentController::class, 'process'])->name('process');
+        Route::get('/succes', [PaymentController::class, 'success'])->name('success');
+        Route::get('/erreur', [PaymentController::class, 'error'])->name('error');
+
+        // 2. La route variable en DERNIER
+        // On ajoute aussi une contrainte (where) pour être sûr que ça ne capture pas n'importe quoi
+        Route::get('/{reference}', [PaymentController::class, 'process'])
+              ->name('index')
+              ->where('reference', 'MILLY-[A-Z0-9-]+'); 
     });
 });
 

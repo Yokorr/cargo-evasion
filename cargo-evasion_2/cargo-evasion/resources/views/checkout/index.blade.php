@@ -56,6 +56,48 @@
                     </div>
                 </div>
                 @endguest
+                
+                <div class="milly-input-group !mt-12" x-data="paymentSelector">
+                    <label class="milly-label ml-4 mb-4 block text-emerald-600">3. Mode de règlement</label>
+                    
+                    <div class="milly-payment-grid">
+                        <div @click="selectMethod('monetico')" 
+                            :class="selected === 'monetico' ? 'active-monetico' : ''"
+                            class="milly-payment-card">
+                            <input type="radio" name="payment_method" value="monetico" x-model="selected" class="sr-only">
+                            <span class="font-black uppercase italic text-xs tracking-tighter block">Carte Bancaire</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Sécurisé par Monetico</span>
+                            <div x-show="selected === 'monetico'" class="milly-payment-dot bg-emerald-500"></div>
+                        </div>
+
+                        <div @click="selectMethod('paypal')" 
+                            :class="selected === 'paypal' ? 'active-paypal' : ''"
+                            class="milly-payment-card">
+                            <input type="radio" name="payment_method" value="paypal" x-model="selected" class="sr-only">
+                            <span class="font-black uppercase italic text-xs tracking-tighter block">PayPal</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Compte ou Carte</span>
+                            <div x-show="selected === 'paypal'" class="milly-payment-dot bg-blue-500"></div>
+                        </div>
+
+                        <div @click="selectMethod('cash')" 
+                            :class="selected === 'cash' ? 'active-cash' : ''"
+                            class="milly-payment-card">
+                            <input type="radio" name="payment_method" value="cash" x-model="selected" class="sr-only">
+                            <span class="font-black uppercase italic text-xs tracking-tighter block">Espèces</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Paiement sur place</span>
+                            <div x-show="selected === 'cash'" class="milly-payment-dot bg-amber-500"></div>
+                        </div>
+
+                        <div @click="selectMethod('check')" 
+                            :class="selected === 'check' ? 'active-check' : ''"
+                            class="milly-payment-card">
+                            <input type="radio" name="payment_method" value="check" x-model="selected" class="sr-only">
+                            <span class="font-black uppercase italic text-xs tracking-tighter block">Chèque</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Ordre : Milly Évasion</span>
+                            <div x-show="selected === 'check'" class="milly-payment-dot bg-gray-800"></div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="pt-8">
                     <button type="submit" class="milly-btn-black w-full py-6 text-xs">
@@ -77,7 +119,7 @@
                     <div class="milly-summary-item">
                         <div>
                             <p class="font-black uppercase italic text-lg leading-none">{{ $item['model'] }}</p>
-                            <p class="milly-label mt-1 lowercase">{{ $item['label'] }}</p>
+                            <p class="milly-label mt-1 lowercase">{{ $item['type_label'] ?? $item['label'] ?? 'Location de vélo' }}</p>
                         </div>
                         <span class="font-black text-lg">{{ $item['price'] }}€</span>
                     </div>

@@ -55,30 +55,35 @@
                         <div class="space-y-6">
                             <label class="milly-label block">2. Choisissez votre créneau</label>
                             <div class="grid grid-cols-1 gap-3">
+                                
                                 <button @click="setSlot('full_day')" 
+                                        :disabled="!isSlotAvailable('full_day')"
                                         :class="currentType === 'full_day' ? 'milly-slot-btn-selected' : 'milly-slot-btn milly-slot-btn-unselected'" 
-                                        class="milly-slot-btn">
+                                        class="milly-slot-btn relative">
                                     <div class="flex justify-between items-center">
                                         <span class="block text-[10px] font-black uppercase opacity-40 mb-1">Journée complète</span>
-                                        <span class="font-black italic" x-text="selectedBike?.price_full_day + '€'"></span>
+                                        <span class="font-black italic text-emerald-600" x-text="selectedBike?.price_full_day + '€'"></span>
                                     </div>
-                                    <span class="text-xl font-bold">09h00 — 17h30</span>
+                                    <span class="text-xl font-bold" :class="!isSlotAvailable('full_day') && 'line-through opacity-30'">09h00 — 17h30</span>
                                 </button>
 
                                 <div class="grid grid-cols-2 gap-3">
                                     <button @click="setSlot('morning')" 
+                                            :disabled="!isSlotAvailable('morning')"
                                             :class="currentType === 'morning' ? 'milly-slot-btn-selected' : 'milly-slot-btn milly-slot-btn-unselected'" 
-                                            class="milly-slot-btn">
+                                            class="milly-slot-btn relative">
                                         <span class="block text-[10px] font-black uppercase opacity-40 mb-1">Matin</span>
-                                        <span class="text-sm font-bold block">09h — 13h</span>
-                                        <span class="text-sm font-black italic mt-1 block text-emerald-500" x-text="selectedBike?.price_morning + '€'"></span>
+                                        <span class="text-sm font-bold block" :class="!isSlotAvailable('morning') && 'line-through opacity-30'">09h — 13h</span>
+                                        <span x-show="isSlotAvailable('morning')" class="text-sm font-black italic mt-1 block text-emerald-500" x-text="selectedBike?.price_morning + '€'"></span>
                                     </button>
+
                                     <button @click="setSlot('afternoon')" 
+                                            :disabled="!isSlotAvailable('afternoon')"
                                             :class="currentType === 'afternoon' ? 'milly-slot-btn-selected' : 'milly-slot-btn milly-slot-btn-unselected'" 
-                                            class="milly-slot-btn">
+                                            class="milly-slot-btn relative">
                                         <span class="block text-[10px] font-black uppercase opacity-40 mb-1">Après-midi</span>
-                                        <span class="text-sm font-bold block">13h30 — 17h30</span>
-                                        <span class="text-sm font-black italic mt-1 block text-emerald-500" x-text="selectedBike?.price_afternoon + '€'"></span>
+                                        <span class="text-sm font-bold block" :class="!isSlotAvailable('afternoon') && 'line-through opacity-30'">13h30 — 17h30</span>
+                                        <span x-show="isSlotAvailable('afternoon')" class="text-sm font-black italic mt-1 block text-emerald-500" x-text="selectedBike?.price_afternoon + '€'"></span>
                                     </button>
                                 </div>
                             </div>

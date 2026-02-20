@@ -7,6 +7,7 @@ use App\Models\Booking; // <-- AJOUTÉ : Pour que le contrôleur connaisse la ta
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -21,12 +22,14 @@ class CheckoutController extends Controller
 
     public function store(Request $request)
     {
-        // 1. Validation
+        // 1. Validation (Ajout du mode de paiement et du mot de passe pour les guests)
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'phone' => 'required',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
             'email' => 'required|email',
+            'payment_method' => 'required|in:monetico,paypal,cash,check', // Validation du choix
+            'password' => Auth::check() ? 'nullable' : 'required|confirmed|min:8', // Validation MDP si guest
         ]);
 
         // 2. Gestion Utilisateur
@@ -47,29 +50,38 @@ class CheckoutController extends Controller
             return redirect()->route('bikes.index')->with('error', 'Votre panier est vide.');
         }
 
-        $orderReference = 'MILLY-' . strtoupper(uniqid());
+        $orderReference = 'MILLY-' . strtoupper(Str::random(8)); // Référence un peu plus courte et propre
         $totalAmount = array_sum(array_column($cart, 'price'));
 
-        // 3. Enregistrement en base
+        // VÉRIFICATION DE SÉCURITÉ AVANT CRÉATIN
         foreach ($cart as $item) {
-            Booking::create([ // <-- Utilisation directe de Booking car importé en haut
+            if (!Booking::isAvailable($item['bike_id'], $item['start_date'], $item['end_date'])) {
+                return redirect()->route('cart.index')->with('error', "Désolé, le vélo {$item['model']} n'est plus disponible pour ces dates. Quelqu'un a été plus rapide !");
+            }
+        }
+
+        // 3. Enregistrement en base
+        foreach ($cart as $index => $item) {
+            Booking::create([
                 'user_id' => $user->id,
                 'bike_id' => $item['bike_id'],
                 'start_date' => $item['start_date'],
                 'end_date' => $item['end_date'],
                 'total_price' => $item['price'],
-                'reference' => $orderReference,
+                'reference' => $orderReference . '-'. ($index + 1),
                 'status' => 'pending',
                 'payment_status' => 'unpaid',
+                'payment_method' => $request->payment_method, // On garde une trace du mode choisi
             ]);
         }
 
-        // 4. Session & Redirection
+        // 4. Session & Redirection (Ajout de payment_method en session)
         session()->put('order_reference', $orderReference);
         session()->put('order_total', $totalAmount);
+        session()->put('payment_method', $request->payment_method); // pour le PaymentController
         
         session()->forget('cart');
-        session()->save(); // On force l'enregistrement ici
+        session()->save();
 
         return redirect()->route('payment.process');
     }

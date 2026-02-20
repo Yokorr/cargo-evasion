@@ -1,4 +1,4 @@
-@extends('layouts.front')
+:@extends('layouts.front')
 
 @section('content')
 <div class="pt-64 pb-40 text-center" x-data="{ submit() { $refs.form.submit() } }" x-init="setTimeout(() => submit(), 1500)">
