@@ -45,7 +45,7 @@
                     
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="{{ route('bikes.index') }}" class="milly-btn-continue">
-                            Continuer
+                            Poursuivre mes achats
                         </a>
                         <a href="{{ route('checkout.index') }}" class="milly-btn-pay">
                             Payer ma location

@@ -11,9 +11,11 @@ class AdminBikeController extends Controller
 {
     public function index()
     {
-        $bikes = Bike::all();
+        $bikes = \App\Models\Bike::paginate(10); 
+
         return view('admin.bikes.index', compact('bikes'));
     }
+    
 
     public function create()
     {

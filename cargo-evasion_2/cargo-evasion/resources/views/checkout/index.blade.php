@@ -12,49 +12,88 @@
             <p class="milly-label mb-12">Ces informations seront utilisées pour votre contrat de location.</p>
 
             <form action="{{ route('checkout.store') }}" method="POST" class="space-y-8">
-                @csrf
-                
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="milly-input-group">
-                        <label class="milly-label ml-4">Prénom</label>
-                        <input type="text" name="first_name" value="{{ old('first_name', Auth::user()?->first_name) }}" required class="milly-checkout-input">
-                    </div>
-                    <div class="milly-input-group">
-                        <label class="milly-label ml-4">Nom</label>
-                        <input type="text" name="last_name" value="{{ old('last_name', Auth::user()?->last_name) }}" required class="milly-checkout-input">
-                    </div>
-                </div>
-
-                <div class="milly-input-group">
-                    <label class="milly-label ml-4">Numéro de téléphone</label>
-                    <input type="tel" name="phone" value="{{ old('phone', Auth::user()?->phone) }}" placeholder="06 .. .. .. .." required class="milly-checkout-input">
-                </div>
-
-                <div class="milly-input-group">
-                    <label class="milly-label ml-4">Adresse Email</label>
-                    <input type="email" name="email" value="{{ old('email', Auth::user()?->email) }}" required class="milly-checkout-input">
-                </div>
-
-                @guest
-                <div class="milly-guest-card">
-                    <div class="flex items-center gap-4">
-                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </div>
-                        <p class="milly-label text-emerald-900 opacity-100">Sécurisez votre compte client</p>
-                    </div>
+                    @csrf
                     
                     <div class="grid grid-cols-2 gap-6">
                         <div class="milly-input-group">
-                            <label class="milly-label text-emerald-600 ml-4">Mot de passe</label>
-                            <input type="password" name="password" required class="milly-checkout-input">
+                            <label class="milly-label ml-4">Prénom</label>
+                            <input type="text" name="first_name" 
+                                value="{{ old('first_name', Auth::user()?->first_name) }}" 
+                                required 
+                                class="milly-checkout-input @error('first_name') !border-red-500 @enderror">
+                            @error('first_name')
+                                <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-4">{{ $message }}</p>
+                            @enderror
                         </div>
+
                         <div class="milly-input-group">
-                            <label class="milly-label text-emerald-600 ml-4">Confirmation</label>
-                            <input type="password" name="password_confirmation" required class="milly-checkout-input">
+                            <label class="milly-label ml-4">Nom</label>
+                            <input type="text" name="last_name" 
+                                value="{{ old('last_name', Auth::user()?->last_name) }}" 
+                                required 
+                                class="milly-checkout-input @error('last_name') !border-red-500 @enderror">
+                            @error('last_name')
+                                <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-4">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
-                </div>
+
+                    <div class="milly-input-group">
+                        <label class="milly-label ml-4">Numéro de téléphone</label>
+                        <input type="tel" name="phone" 
+                            value="{{ old('phone', Auth::user()?->phone) }}" 
+                            placeholder="06 .. .. .. .." 
+                            required 
+                            class="milly-checkout-input @error('phone') !border-red-500 @enderror">
+                        @error('phone')
+                            <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-4">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="milly-input-group">
+                        <label class="milly-label ml-4">Adresse Email</label>
+                        <input type="email" name="email" 
+                            value="{{ old('email', Auth::user()?->email) }}" 
+                            required 
+                            class="milly-checkout-input @error('email') !border-red-500 @enderror">
+                        @error('email')
+                            <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-4">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                @guest
+                    <div class="milly-guest-card">
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <p class="milly-label text-emerald-900 opacity-100">Sécurisez votre compte client</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="milly-input-group">
+                                <label class="milly-label text-emerald-600 ml-4">Mot de passe</label>
+                                <input type="password" 
+                                    name="password" 
+                                    required 
+                                    class="milly-checkout-input @error('password') !border-red-500 @enderror">
+                                
+                                @error('password')
+                                    <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-4">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+                            <div class="milly-input-group">
+                                <label class="milly-label text-emerald-600 ml-4">Confirmation</label>
+                                <input type="password" 
+                                    name="password_confirmation" 
+                                    required 
+                                    class="milly-checkout-input @error('password') !border-red-500 @enderror">
+                            </div>
+                        </div>
+                    </div>
                 @endguest
                 
                 <div class="milly-input-group !mt-12" x-data="paymentSelector">
@@ -87,7 +126,7 @@
                             <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Paiement sur place</span>
                             <div x-show="selected === 'cash'" class="milly-payment-dot bg-amber-500"></div>
                         </div>
-
+                        <!--
                         <div @click="selectMethod('check')" 
                             :class="selected === 'check' ? 'active-check' : ''"
                             class="milly-payment-card">
@@ -96,6 +135,7 @@
                             <span class="text-[10px] text-gray-400 uppercase font-bold mt-1">Ordre : Milly Évasion</span>
                             <div x-show="selected === 'check'" class="milly-payment-dot bg-gray-800"></div>
                         </div>
+                        -->
                     </div>
                 </div>
 

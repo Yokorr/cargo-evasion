@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts.admin')
+@section('content')
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-8 shadow-sm sm:rounded-[32px]">
@@ -68,4 +69,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

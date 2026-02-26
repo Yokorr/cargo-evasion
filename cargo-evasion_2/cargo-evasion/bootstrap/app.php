@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
         ]);
+
+        // --- AJOUT DE L'EXCEPTION MONETICO ---
+        $middleware->validateCsrfTokens(except: [
+            '/paiement/notify', // Autorise Monetico à envoyer ses données sans jeton CSRF
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

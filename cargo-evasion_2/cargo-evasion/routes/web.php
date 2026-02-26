@@ -14,7 +14,8 @@ use App\Http\Controllers\PaymentController;
 // Contrôleurs Admin
 use App\Http\Controllers\Admin\AdminBikeController;
 use App\Http\Controllers\Admin\AdminDailyCodeController;
-
+use App\Http\Controllers\Admin\AdminBookingController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 /*
 |--------------------------------------------------------------------------
 | 1. PAGES PUBLIQUES (FRONT-OFFICE)
@@ -63,6 +64,8 @@ Route::prefix('cart')->name('cart.')->group(function () {
 Route::get('/finaliser-ma-reservation', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/finaliser-ma-reservation', [CheckoutController::class, 'store'])->name('checkout.store');
 
+Route::post('/paiement/notify', [PaymentController::class, 'notify'])->name('payment.notify');
+
 Route::middleware('auth')->group(function () {
     
     Route::prefix('paiement')->name('payment.')->group(function () {
@@ -104,7 +107,9 @@ require __DIR__.'/auth.php';
 */
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    
+
+
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     // Gestion de la Flotte
     Route::get('/velos', [AdminBikeController::class, 'index'])->name('bikes.index');
     Route::get('/velos/creer', [AdminBikeController::class, 'create'])->name('bikes.create');
@@ -115,5 +120,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Codes Digicodes quotidiens
     Route::get('/codes', [AdminDailyCodeController::class, 'index'])->name('codes.index');
     Route::post('/codes', [AdminDailyCodeController::class, 'store'])->name('codes.store');
+
+    // Gestion des Réservations
+    Route::get('/reservations', [AdminBookingController::class, 'index'])->name('bookings.index');
+    Route::get('/reservations/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/reservations/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.updateStatus');
 
 });
